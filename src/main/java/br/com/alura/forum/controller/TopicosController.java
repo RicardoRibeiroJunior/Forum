@@ -22,7 +22,7 @@ public class TopicosController {
 			List<Topico> topicos = topicoRpository.findAll();
 			return TopicoDto.converter(topicos);
 		}else {
-			List<Topico> topicos = topicoRpository.consultaCursoPeloNome(nomeCurso);
+			List<Topico> topicos = topicoRpository.findByCurso_Nome(nomeCurso);
 			return TopicoDto.converter(topicos);
 		}
 	}
