@@ -50,6 +50,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter{
 			.antMatchers(HttpMethod.GET, "/topicos").permitAll()//liberando URL publica para listar.
 			.antMatchers(HttpMethod.GET, "/topicos/*").permitAll()//liberando URL para detalhar um tópico (*).
 			.antMatchers(HttpMethod.POST, "/auth").permitAll()
+			.antMatchers(HttpMethod.GET, "/actuator/**").permitAll()
 			.anyRequest().authenticated()//Qualquer outra requisição tem que está autenticado.
 			.and().csrf().disable()//desabilita a segurança csrf
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)//informa que será usado token na comunicação
@@ -61,6 +62,8 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter{
 	//Usado para configurações de recursos estáticos (Acesso as js, css, img)
 	@Override
 	public void configure(WebSecurity web) throws Exception {
+		web.ignoring()
+        .antMatchers("/**.html", "/v2/api-docs", "/webjars/**", "/configuration/**", "/swagger-resources/**");
 	}
 
 }

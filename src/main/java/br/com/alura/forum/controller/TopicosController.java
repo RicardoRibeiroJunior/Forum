@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -57,12 +58,21 @@ public class TopicosController {
 	Podemos informar uma ordenação padrão com a anotação @PageableDefault caso não seja informado ordenação na requisição.
 	
 	**/
-	@GetMapping
-	@Cacheable(value = "listaDeTopicos")
-	public Page<TopicoDto> listar(@RequestParam(required = false) String nomeCurso,
+	
+	
+	/**
+	 * 
+	 * PAGINAÇÃO SEM AJUDA DO SPRING BOOT
+	 public Page<TopicoDto> listar(@RequestParam(required = false) String nomeCurso,
 			@RequestParam int pagina,@RequestParam int qtd, @RequestParam String ordenacao){
 		
 		Pageable paginacao = PageRequest.of(pagina, qtd, Direction.DESC, ordenacao);
+	 **/
+	
+	@GetMapping
+	@Cacheable(value = "listaDeTopicos")
+	public Page<TopicoDto> listar(@RequestParam(required = false) String nomeCurso,
+			@PageableDefault(sort = "id", direction = Direction.DESC, page = 0, size = 10) Pageable paginacao){
 		
 		if(nomeCurso == null) {
 			Page<Topico> topicos = topicoRepository.findAll(paginacao);
