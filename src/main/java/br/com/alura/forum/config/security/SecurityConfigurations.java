@@ -12,6 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import br.com.alura.forum.repository.UsuarioRepository;
 
 @EnableWebSecurity
 @Configuration
@@ -19,6 +22,12 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
 	private AutenticacaoService autenticacaoService;
+	
+	@Autowired
+	private TokenService tokenService;
+	
+	@Autowired
+	private UsuarioRepository usuarioReposiory;
 	
 	@Override
 	@Bean
@@ -43,7 +52,8 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter{
 			.antMatchers(HttpMethod.POST, "/auth").permitAll()
 			.anyRequest().authenticated()//Qualquer outra requisição tem que está autenticado.
 			.and().csrf().disable()//desabilita a segurança csrf
-			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//informa que será usado token na comunicação
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)//informa que será usado token na comunicação
+			.and().addFilterBefore(new AutenticacaoViaTokenFiltro(tokenService, usuarioReposiory), UsernamePasswordAuthenticationFilter.class);//registro do filtro de autenticação
 	}
 	
 	
